@@ -1,0 +1,73 @@
+//define lengths and angles
+int length1 = 200;
+int length2 = 100;
+float angle1;
+float angle2;
+
+void setup() {
+  size(600, 600); //size of screen is 600*600
+  strokeWeight(10); //widfh of line is 10
+
+} 
+
+
+void draw() {
+
+  noCursor(); 
+  background(128);//paint background 128
+
+  //move zero to the center of screen
+  float x0 = width/2;
+  float y0 = height/2;
+  float x1 = mouseX-x0; 
+  float y1 = mouseY-y0;
+  float max = 2*abs(length1+length2);
+  float min = 2*abs(length1-length2);
+
+  // paint area of arms
+  stroke(200); //color of ellipse is 200
+  strokeWeight(2); //width of ellipse is 2
+  fill(50); // color of inner area of ellipse is 50
+  ellipse(x0, y0, max, max); //inner ellipse
+  fill(128);// color of inner area of outer ellipse is 128
+  ellipse(x0, y0, min, min); //outer ellipse
+
+  // show cursor as "red point"
+  stroke(255, 0, 0); //color of cursor is (255,0,0)
+  strokeWeight(10); //width of point is 10
+  ellipse( mouseX, mouseY, 10, 10 ); //make point of cursor
+
+  //calculate cosΘ1,cosΘ2 by cosine formula(a^2=b^2+c^2-2bccosΘ)
+  float acos1up = sq(x1)+sq(y1)+sq(length1)-sq(length2);
+  float acos1down = 2*length1*sqrt(sq(x1)+sq(y1));
+  
+  //calculate angle1
+  if (mouseX >= x0) { //acctanjent is defined -π/2~π/2
+    angle1 = acos(acos1up/acos1down)+atan(y1/x1);//about x>0
+  } else {
+    angle1 = acos(acos1up/acos1down)+atan(y1/x1)+PI; // if x<0, add π
+  }
+  
+
+  //draw arm1
+  stroke(255, 0, 255); //color of arm1 is (255,0,255)
+  strokeWeight(5); //width of arm1 is 5
+  //connnect zero and limit of arm1
+  line(x0,y0,x0+length1*cos(angle1), y0+length1*sin(angle1)); 
+
+  //calculate angle2
+  float acos2up = sq(length1)+sq(length2)-(sq(x1)+sq(y1));
+  float acos2down = 2*length1*length2;  
+
+  //define zero of arm2
+  float x2 = x0+length1*cos(angle1); //about x
+  float y2 = y0+length1*sin(angle1); //about y
+  angle2 = acos(acos2up/acos2down)+PI;
+
+ //draw arm2
+  stroke(0, 255, 255); //color of arm2 is (0,255,255)
+ //connnect zero and limit of arm2
+  float angle12 = angle1 +angle2;
+  line(x2, y2, x2+ length2*cos(angle12), y2+ length2*sin(angle12)); 
+
+}
